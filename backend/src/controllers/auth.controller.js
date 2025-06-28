@@ -94,19 +94,30 @@ export const updateProfile = async (req, res) => {
       return res.status(400).json({ message: "Profile pic is required" });
     }
 
-    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+    let finalProfilePicUrl = "";
+
+    // Handle prebuilt avatar paths (e.g., "/avatars/avatar1.png")
+    if (profilePic.startsWith("/avatars/")) {
+      finalProfilePicUrl = profilePic; // Use directly
+    } else {
+      // Handle uploaded base64 image
+      const uploadResponse = await cloudinary.uploader.upload(profilePic);
+      finalProfilePicUrl = uploadResponse.secure_url;
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { profilePic: uploadResponse.secure_url },
+      { profilePic: finalProfilePicUrl },
       { new: true }
     );
 
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.log("error in update profile:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error in updateProfile:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 export const checkAuth = (req, res) => {
   try {

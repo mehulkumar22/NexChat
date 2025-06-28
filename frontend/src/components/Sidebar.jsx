@@ -25,7 +25,7 @@ const Sidebar = () => {
       <div className="border-b border-base-300 w-full p-5">
         <div className="flex items-center gap-2">
           <Users className="size-6" />
-          <span className="font-medium hidden lg:block">Contacts</span>
+          <span className="font-medium hidden lg:block">Friends</span>
         </div>
         {/* TODO: Online filter toggle */}
         <div className="mt-3 hidden lg:flex items-center gap-2">
@@ -59,18 +59,26 @@ const Sidebar = () => {
                 alt={user.name}
                 className="size-12 object-cover rounded-full"
               />
-              {onlineUsers.includes(user._id) && (
-                <span
-                  className="absolute bottom-0 right-0 size-3 bg-green-500 
-                  rounded-full ring-2 ring-zinc-900"
-                />
-              )}
+              <span
+                className={`absolute bottom-0 right-0 size-3 rounded-full ring-1 ring-zinc-700 ${
+                  onlineUsers.includes(user._id)
+                    ? "bg-green-500"
+                    : "bg-red-500"
+                }`}
+              />
             </div>
+
 
             {/* User info - only visible on larger screens */}
             <div className="hidden lg:block text-left min-w-0">
               <div className="font-medium truncate">{user.fullName}</div>
-              <div className="text-sm text-zinc-400">
+              <div
+                className={`text-sm ${
+                  onlineUsers.includes(user._id)
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
+              >
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
             </div>
